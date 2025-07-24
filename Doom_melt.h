@@ -2,8 +2,12 @@
 #define doom_melt_h
 
 #include <Arduino.h>
-#include <DisplayConfig.h>
-#include <SdCard_utils.h>
+#include <U8g2lib.h>
+
+
+
+
+U8G2_SSD1306_128X64_NONAME_F_HW_I2C u8g2(U8G2_R0, /* reset=*/ U8X8_PIN_NONE);
 
 #define WIDTH 128
 #define HEIGHT 64
@@ -155,39 +159,6 @@ void doom_melt_frame_change(const uint8_t* old_image, const uint8_t* new_image) 
     while (!melt_finished) {
         ESP.wdtDisable();
         melt_finished = melt_columns(melt_columns_buf, new_image_columns, step);
-        u8g2.clearBuffer();
-        draw_columns(melt_columns_buf);
-        u8g2.sendBuffer();
-		if(melt_finished)
-			delay(100);
-        ESP.wdtEnable(WDTO_8S);
-        step++;
-    }
-    free(old_image_columns);
-    free(new_image_columns);
-    free(melt_columns_buf);
-    free(melt_delay);
-    free(melt_order);
-}
-void doom_melt_effect(const uint8_t* old_image, const uint8_t* new_image) {
-    uint8_t* old_image_columns = (uint8_t*)malloc(128 * 8);
-    uint8_t* new_image_columns = (uint8_t*)malloc(128 * 8);
-    uint8_t* melt_columns_buf = (uint8_t*)malloc(128 * 8);
-    melt_delay = (uint8_t*)malloc(128);
-    melt_order = (uint8_t*)malloc(128);
-
-    if (!old_image_columns || !new_image_columns || !melt_columns_buf) return;
-    
-    split_xbm_into_columns(new_image, new_image_columns, 128, 64);
-    split_xbm_into_columns(old_image, old_image_columns, 128, 64);
-    copy_columns(melt_columns_buf, old_image_columns);
-
-    byte step = 0;
-   	bool melt_finished = false;
-   	generate_doom_style_delays();
-    while (!melt_finished) {
-        ESP.wdtDisable();
-        melt_finished = melt_columns(melt_columns_buf, new_image_columns, step,1);
         u8g2.clearBuffer();
         draw_columns(melt_columns_buf);
         u8g2.sendBuffer();
