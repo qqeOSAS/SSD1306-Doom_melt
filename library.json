@@ -1,0 +1,17 @@
+{
+"name": "Doom_melt",
+"version": "1.0.0",
+"description": "Doom melt effect renderer for SSD1306 using U8g2",
+"keywords": ["oled", "u8g2", "doom", "effect"],
+"authors": [
+{
+"name": "Andriy Manyuk",
+"url": "https://github.com/qqeOSAS"
+}
+],
+"dependencies": [
+"olikraus/U8g2"
+],
+"frameworks": "arduino",
+"platforms": "*"
+}
