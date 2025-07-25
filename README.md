@@ -19,7 +19,7 @@ A library for rendering the classic **DOOM "melt" screen transition effect** on 
 
 ---
 
-## 🔥 Inspired By
+##  Inspired By
 
 This library was inspired by the iconic DOOM melt screen transition seen in classic games.  
 The effect is explained in this demo video:  
@@ -29,7 +29,7 @@ After watching it, I decided to implement this effect for microcontrollers with 
 
 ---
 
-## ✨ Features
+##  Features
 
 - Legendary DOOM-style "melt" animation from one image to another
 - Optimized for SSD1306 128x64 displays
@@ -38,7 +38,7 @@ After watching it, I decided to implement this effect for microcontrollers with 
 
 ---
 
-## 🛠️ Requirements
+##  Requirements
 
 - [U8g2](https://github.com/olikraus/u8g2) graphics library
 - An SSD1306-compatible OLED display (tested on 128x64)
@@ -46,7 +46,7 @@ After watching it, I decided to implement this effect for microcontrollers with 
 
 ---
 
-## 🚀 Installation (PlatformIO)
+##  Installation (PlatformIO)
 
 In your `platformio.ini` file, add:
 
@@ -57,13 +57,13 @@ lib_deps =
 
 ---
 
-## 📖 Usage
+##  Usage
 
 See [examples](https://github.com/qqeOSAS/SSD1306-Doom_melt/tree/main/examples) for how to use the library.
 
 ---
 
-## 💬 License & Contributions
+##  License & Contributions
 
 Open for contributions!  
 Pull requests, issues, and suggestions are welcome.
