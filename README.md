@@ -10,8 +10,9 @@
                                                                         |_____|
 by qqeOSAS
 
+![0-02-01-c7013bd51f61f4b953c09c9e357538a8d36ff377820009a836b5ae629cb8a908_f939b771f3e63ccf1-ezgif com-optimize](https://github.com/user-attachments/assets/aacefd63-2a62-48b0-a7fc-c51fcdc957b6)
 
-![0-02-01-c7013bd51f61f4b953c09c9e357538a8d36ff377820009a836b5ae629cb8a908_f939b771f3e63ccf-ezgif com-video-to-gif-converter](https://github.com/user-attachments/assets/1ce1e23a-d9bc-444f-96d9-bd6f7aa4b297)
+
 
 
 
