@@ -70,14 +70,8 @@ Pull requests, issues, and suggestions are welcome.
 
 ---
 
-## 🤘 Credits
 
-- DOOM transition inspiration: [YouTube demo](https://www.youtube.com/watch?v=lUsCXSNhHmI)
-- [U8g2 library](https://github.com/olikraus/u8g2) by olikraus
+![0-02-01-c7013bd51f61f4b953c09c9e357538a8d36ff377820009a836b5ae629cb8a908_f939b771f3e63ccf1-ezgif com-optimize](https://github.com/user-attachments/assets/73fb0912-791f-4d9f-be9d-9ceb5302f48a)
 
----
 
-<p align="center">
-  <b>Enjoy bringing DOOM vibes to your microcontroller projects!</b>
-</p>
 
