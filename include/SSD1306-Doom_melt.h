@@ -49,54 +49,61 @@ void split_xbm_into_columns(const uint8_t* xbm, uint8_t* columns, int width, int
 // Draw 8 vertical pixels from a byte at position (x, y)
 void draw_byte_pixels(uint8_t byte, int x, int y) {
     if (!doom_u8g2) return;
+
     for (int bit = 0; bit < 8; bit++) {
-        if (byte & (1 << bit)) {
+        if (byte & (1 << bit)) 
             doom_u8g2->drawPixel(x, y + bit);
-        }
+        
     }
 }
 
 // Draw a single column of bytes at position x
 void draw_column(int x, uint8_t* column) {
-    for (int byte = 0; byte < BYTES_PER_COL; byte++) {
+    for (int byte = 0; byte < BYTES_PER_COL; byte++) 
         draw_byte_pixels(column[byte], x, byte * 8);
-    }
+    
 }
 
 // Draw all columns to the display
-inline void draw_columns(uint8_t* columns) {
-    for (int x = 0; x < WIDTH; x++) {
+void draw_columns(uint8_t* columns) {
+    for (int x = 0; x < WIDTH; x++) 
         draw_column(x, columns + x * BYTES_PER_COL);
-    }
+    
 }
 
 // Copy a single column from src to dest at position x
-inline void copy_column(uint8_t* dest, const uint8_t* src, int x) {
-    for (int byte = 0; byte < BYTES_PER_COL; byte++) {
+void copy_column(uint8_t* dest, const uint8_t* src, int x) {
+    for (int byte = 0; byte < BYTES_PER_COL; byte++) 
         dest[x * BYTES_PER_COL + byte] = src[x * BYTES_PER_COL + byte];
-    }
+    
 }
 
 // Copy all columns from src to dest
-inline void copy_columns(uint8_t* dest, const uint8_t* src) {
+void copy_columns(uint8_t* dest, const uint8_t* src) {
     for (int x = 0; x < WIDTH; x++) copy_column(dest, src, x);
 }
 
 // Generate random delays for each column to create the melt effect
 inline void generate_doom_style_delays() {
     if (!melt_delay) return;
+
     const uint8_t max_delay = 15; // Maximum delay value
     const uint8_t group_size = 4; // Number of columns per group
+
     for (int x = 0; x < WIDTH; x += group_size) {
+
         uint8_t delay = random(0, max_delay + 1);
-        for (int i = 0; i < group_size && x + i < WIDTH; i++) {
+
+        for (int i = 0; i < group_size && x + i < WIDTH; i++) 
             melt_delay[x + i] = delay;
-        }
+        
     }
     // Shuffle delays for more randomness
     for (int i = 0; i < 10; i++) {
+
         int a = random(0, WIDTH);
         int b = random(0, WIDTH);
+
         uint8_t t = melt_delay[a];
         melt_delay[a] = melt_delay[b];
         melt_delay[b] = t;
@@ -106,13 +113,15 @@ inline void generate_doom_style_delays() {
 // Perform one melt step for a single column, returns true if finished
 inline bool melt_column_bit(uint8_t* melt_column, const uint8_t* new_column, uint8_t local_melt_step, bool one_color = false) {
     if (local_melt_step >= HEIGHT) return true;
+
     uint8_t pixel_index = HEIGHT - 1 - local_melt_step;
     uint8_t new_bit;
-    if (!one_color) {
+
+    if (!one_color) 
         new_bit = (new_column[pixel_index / 8] >> (pixel_index % 8)) & 0x01;
-    } else {
+    else 
         new_bit = 0;
-    }
+    
     for (int8_t byte = BYTES_PER_COL - 1; byte >= 0; --byte) {
         uint8_t next_bit = (byte > 0) ? ((melt_column[byte - 1] & 0x80) >> 7) : new_bit;
         melt_column[byte] = (melt_column[byte] << 1) | next_bit;
@@ -127,16 +136,20 @@ inline bool melt_column_bit(uint8_t* melt_column, const uint8_t* new_column, uin
 // Perform one melt step for all columns, returns true if all columns finished
 inline bool melt_columns(uint8_t* melt_columns, const uint8_t* new_columns, uint8_t step, bool one_color = false) {
     bool all_melt_finished = true;
+
     for (uint8_t x = 0; x < WIDTH; x++) {
         if (step >= melt_delay[x]) {
+
+            // Calculate local step for this column
             uint8_t local_step = step - melt_delay[x];
             uint8_t* calculated_melt_column = melt_columns + x * BYTES_PER_COL;
             const uint8_t* calculated_new_column = new_columns + x * BYTES_PER_COL;
             bool column_melt_finished = melt_column_bit(calculated_melt_column, calculated_new_column, local_step, one_color);
+
             if (!column_melt_finished) all_melt_finished = false;
-        } else {
+        } 
+        else 
             all_melt_finished = false;
-        }
     }
     return all_melt_finished;
 }
@@ -144,10 +157,12 @@ inline bool melt_columns(uint8_t* melt_columns, const uint8_t* new_columns, uint
 // Main function to animate the DOOM melt effect between two images
 inline void doom_melt_frame_change(const uint8_t* old_image, const uint8_t* new_image) {
     if (!doom_u8g2) return;
+
     uint8_t* old_image_columns = (uint8_t*)malloc(WIDTH * BYTES_PER_COL);
     uint8_t* new_image_columns = (uint8_t*)malloc(WIDTH * BYTES_PER_COL);
     uint8_t* melt_columns_buf = (uint8_t*)malloc(WIDTH * BYTES_PER_COL);
     melt_delay = (uint8_t*)malloc(WIDTH);
+
     if (!old_image_columns || !new_image_columns || !melt_columns_buf || !melt_delay) {
         free(old_image_columns);
         free(new_image_columns);
@@ -158,8 +173,11 @@ inline void doom_melt_frame_change(const uint8_t* old_image, const uint8_t* new_
     // Convert images to column format
     split_xbm_into_columns(new_image, new_image_columns, WIDTH, HEIGHT);
     split_xbm_into_columns(old_image, old_image_columns, WIDTH, HEIGHT);
+
     copy_columns(melt_columns_buf, old_image_columns);
+
     generate_doom_style_delays();
+
     uint8_t step = 0;
     bool melt_finished = false;
     while (!melt_finished) {
@@ -183,6 +201,7 @@ inline void doom_melt_frame_change(const uint8_t* old_image, const uint8_t* new_
     free(new_image_columns);
     free(melt_columns_buf);
     free(melt_delay);
+
     melt_delay = nullptr;
 }
 
