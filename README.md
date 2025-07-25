@@ -50,5 +50,5 @@ lib_deps =
 
 ```
 ## Usage
-After instalation check [examples](https://github.com/qqeOSAS/SSD1306-Doom_melt/tree/main/examples)
+Check [examples](https://github.com/qqeOSAS/SSD1306-Doom_melt/tree/main/examples)
 
