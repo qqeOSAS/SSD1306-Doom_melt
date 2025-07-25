@@ -8,14 +8,11 @@
        ___) |__) | |_| | |___) | |_| | (_) | | |_| | (_) | (_) | | | | | |   | |  | |  __/ | |_ 
       |____/____/|____/|_|____/ \___/ \___/  |____/ \___/ \___/|_| |_| |_|___|_|  |_|\___|_|\__|
                                                                         |_____|
-by qqeOSAS
 
-
-
-A library for rendering the classic **DOOM "melt" screen transition effect** on OLED displays using the SSD1306 driver and the U8g2 graphics library.
 
 ![0-02-01-c7013bd51f61f4b953c09c9e357538a8d36ff377820009a836b5ae629cb8a908_f939b771f3e63ccf1-ezgif com-optimize](https://github.com/user-attachments/assets/aacefd63-2a62-48b0-a7fc-c51fcdc957b6)
 
+A library for rendering the classic **DOOM "melt" screen transition effect** on OLED displays using the SSD1306 driver and the U8g2 graphics library.
 
 ## Inspired By
 
