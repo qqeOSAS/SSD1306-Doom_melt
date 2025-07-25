@@ -10,13 +10,12 @@
                                                                         |_____|
 by qqeOSAS
 
-![0-02-01-c7013bd51f61f4b953c09c9e357538a8d36ff377820009a836b5ae629cb8a908_f939b771f3e63ccf1-ezgif com-optimize](https://github.com/user-attachments/assets/aacefd63-2a62-48b0-a7fc-c51fcdc957b6)
-
-
-
 
 
 A library for rendering the classic **DOOM "melt" screen transition effect** on OLED displays using the SSD1306 driver and the U8g2 graphics library.
+
+![0-02-01-c7013bd51f61f4b953c09c9e357538a8d36ff377820009a836b5ae629cb8a908_f939b771f3e63ccf1-ezgif com-optimize](https://github.com/user-attachments/assets/aacefd63-2a62-48b0-a7fc-c51fcdc957b6)
+
 
 ## 🎬 Inspired By
 
@@ -31,7 +30,7 @@ After watching it, I decided to implement this effect for microcontrollers with 
 - Smooth DOOM-style "melt" animation from one image to another
 - Optimized for SSD1306 128x64 displays
 - Built on top of the U8g2 library
-- Supports per-column delay to simulate realistic "melting"
+- Used dynamic memori allocation
 
 ## 🔧 Requirements
 
@@ -39,10 +38,13 @@ After watching it, I decided to implement this effect for microcontrollers with 
 - An SSD1306-compatible OLED display (tested on 128x64)
 - Arduino-compatible microcontroller
 
-## 📦 Installation
+## 📦 Installation Platformio
+Inside `platformio.ini` file
 
-1. Copy the library folder into your Arduino `libraries/` directory
-2. Include it in your sketch:
+
 
 ```cpp
-#include <SSD1306-Doom_melt.h>
+lib_deps = 
+
+   https://github.com/qqeOSAS/SSD1306-Doom_melt
+
