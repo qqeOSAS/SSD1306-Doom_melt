@@ -1,7 +1,7 @@
 # Doom Melt Effect Renderer for SSD1306 using U8g2
 
 
-/*
+
        ____ ____  ____  _ _____  ___   __     ____                            __  __      _ _   
       / ___/ ___||  _ \/ |___ / / _ \ / /_   |  _ \  ___   ___  _ __ ___     |  \/  | ___| | |_ 
       \___ \___ \| | | | | |_ \| | | | '_ \  | | | |/ _ \ / _ \| '_ ` _ \    | |\/| |/ _ \ | __|
@@ -12,7 +12,7 @@
     Doom Melt Effect Renderer for SSD1306 using U8g2
     Рендер DOOM melt-ефекту для SSD1306 з використанням U8g2
     Licensed under the MIT License
-*/
+
 
 
 A library for rendering the classic **DOOM "melt" screen transition effect** on OLED displays using the SSD1306 driver and the U8g2 graphics library.
