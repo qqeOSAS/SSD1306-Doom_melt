@@ -12,21 +12,23 @@
 */
 
 #pragma once
-///sdsdsdsdasdasdasdasd
+
 #include <Arduino.h>
 #include <U8g2lib.h>
 
-#define WIDTH 128 // Display width / Ширина дисплея
-#define HEIGHT 64 // Display height / Висота дисплея
-#define BYTES_PER_COL (HEIGHT / 8) // Bytes per column / Байтів на колонку
+#define WIDTH 128 // Display width
+#define HEIGHT 64 // Display height
+#define BYTES_PER_COL (HEIGHT / 8) // Bytes per column
 
-static U8G2* doom_u8g2 = nullptr; // Display pointer / Вказівник на дисплей
+static U8G2* doom_u8g2 = nullptr; // Pointer to the display
 
-inline void doom_melt_set_display(U8G2* display) { doom_u8g2 = display; } // Set external display / Встановити дисплей
+// Set the display object to use for rendering
+inline void doom_melt_set_display(U8G2* display) { doom_u8g2 = display; }
 
-static uint8_t* melt_delay = nullptr; // Delay per column / Затримка по колонках
+uint8_t* melt_delay; // Per-column melt delay array
 
-inline void split_xbm_into_columns(const uint8_t* xbm, uint8_t* columns, int width, int height) {
+// Convert XBM image to column-major byte array
+void split_xbm_into_columns(const uint8_t* xbm, uint8_t* columns, int width, int height) {
     for (int x = 0; x < width; x++) {
         for (int y_byte = 0; y_byte < height / 8; y_byte++) {
             uint8_t value = 0;
@@ -44,7 +46,8 @@ inline void split_xbm_into_columns(const uint8_t* xbm, uint8_t* columns, int wid
     }
 }
 
-inline void draw_byte_pixels(uint8_t byte, int x, int y) {
+// Draw 8 vertical pixels from a byte at position (x, y)
+void draw_byte_pixels(uint8_t byte, int x, int y) {
     if (!doom_u8g2) return;
     for (int bit = 0; bit < 8; bit++) {
         if (byte & (1 << bit)) {
@@ -53,38 +56,44 @@ inline void draw_byte_pixels(uint8_t byte, int x, int y) {
     }
 }
 
-inline void draw_column(int x, uint8_t* column) {
+// Draw a single column of bytes at position x
+void draw_column(int x, uint8_t* column) {
     for (int byte = 0; byte < BYTES_PER_COL; byte++) {
         draw_byte_pixels(column[byte], x, byte * 8);
     }
 }
 
+// Draw all columns to the display
 inline void draw_columns(uint8_t* columns) {
     for (int x = 0; x < WIDTH; x++) {
         draw_column(x, columns + x * BYTES_PER_COL);
     }
 }
 
+// Copy a single column from src to dest at position x
 inline void copy_column(uint8_t* dest, const uint8_t* src, int x) {
     for (int byte = 0; byte < BYTES_PER_COL; byte++) {
         dest[x * BYTES_PER_COL + byte] = src[x * BYTES_PER_COL + byte];
     }
 }
 
+// Copy all columns from src to dest
 inline void copy_columns(uint8_t* dest, const uint8_t* src) {
     for (int x = 0; x < WIDTH; x++) copy_column(dest, src, x);
 }
 
+// Generate random delays for each column to create the melt effect
 inline void generate_doom_style_delays() {
     if (!melt_delay) return;
-    const uint8_t max_delay = 15; // Max delay / Макс. затримка
-    const uint8_t group_size = 4; // Group size / Розмір групи
+    const uint8_t max_delay = 15; // Maximum delay value
+    const uint8_t group_size = 4; // Number of columns per group
     for (int x = 0; x < WIDTH; x += group_size) {
         uint8_t delay = random(0, max_delay + 1);
         for (int i = 0; i < group_size && x + i < WIDTH; i++) {
             melt_delay[x + i] = delay;
         }
     }
+    // Shuffle delays for more randomness
     for (int i = 0; i < 10; i++) {
         int a = random(0, WIDTH);
         int b = random(0, WIDTH);
@@ -94,6 +103,7 @@ inline void generate_doom_style_delays() {
     }
 }
 
+// Perform one melt step for a single column, returns true if finished
 inline bool melt_column_bit(uint8_t* melt_column, const uint8_t* new_column, uint8_t local_melt_step, bool one_color = false) {
     if (local_melt_step >= HEIGHT) return true;
     uint8_t pixel_index = HEIGHT - 1 - local_melt_step;
@@ -107,12 +117,14 @@ inline bool melt_column_bit(uint8_t* melt_column, const uint8_t* new_column, uin
         uint8_t next_bit = (byte > 0) ? ((melt_column[byte - 1] & 0x80) >> 7) : new_bit;
         melt_column[byte] = (melt_column[byte] << 1) | next_bit;
     }
+    // Check if the column matches the target
     for (uint8_t n = 0; n < BYTES_PER_COL; ++n) {
         if (melt_column[n] != new_column[n]) return false;
     }
     return true;
 }
 
+// Perform one melt step for all columns, returns true if all columns finished
 inline bool melt_columns(uint8_t* melt_columns, const uint8_t* new_columns, uint8_t step, bool one_color = false) {
     bool all_melt_finished = true;
     for (uint8_t x = 0; x < WIDTH; x++) {
@@ -129,6 +141,7 @@ inline bool melt_columns(uint8_t* melt_columns, const uint8_t* new_columns, uint
     return all_melt_finished;
 }
 
+// Main function to animate the DOOM melt effect between two images
 inline void doom_melt_frame_change(const uint8_t* old_image, const uint8_t* new_image) {
     if (!doom_u8g2) return;
     uint8_t* old_image_columns = (uint8_t*)malloc(WIDTH * BYTES_PER_COL);
@@ -142,6 +155,7 @@ inline void doom_melt_frame_change(const uint8_t* old_image, const uint8_t* new_
         free(melt_delay);
         return;
     }
+    // Convert images to column format
     split_xbm_into_columns(new_image, new_image_columns, WIDTH, HEIGHT);
     split_xbm_into_columns(old_image, old_image_columns, WIDTH, HEIGHT);
     copy_columns(melt_columns_buf, old_image_columns);
@@ -151,19 +165,20 @@ inline void doom_melt_frame_change(const uint8_t* old_image, const uint8_t* new_
     while (!melt_finished) {
 
 #if defined(ESP8266) || defined(ESP32)
-        ESP.wdtDisable();
+        ESP.wdtDisable(); // Disable watchdog timer for long operation
 #endif
         melt_finished = melt_columns(melt_columns_buf, new_image_columns, step);
         doom_u8g2->clearBuffer();
         draw_columns(melt_columns_buf);
         doom_u8g2->sendBuffer();
         if (melt_finished)
-            delay(100);
+            delay(100); // Short pause at the end
 #if defined(ESP8266) || defined(ESP32)
-        ESP.wdtEnable(WDTO_8S);
+        ESP.wdtEnable(WDTO_8S); // Re-enable watchdog timer
 #endif
         step++;
     }
+    // Free allocated memory
     free(old_image_columns);
     free(new_image_columns);
     free(melt_columns_buf);
