@@ -12,7 +12,7 @@
 */
 
 #pragma once
-
+///sdsdsdsdasdasdasdasd
 #include <Arduino.h>
 #include <U8g2lib.h>
 
@@ -25,7 +25,6 @@ static U8G2* doom_u8g2 = nullptr; // Display pointer / Вказівник на �
 inline void doom_melt_set_display(U8G2* display) { doom_u8g2 = display; } // Set external display / Встановити дисплей
 
 static uint8_t* melt_delay = nullptr; // Delay per column / Затримка по колонках
-static uint8_t* melt_order = nullptr; // Column order (unused) / Порядок колонок (не використовується)
 
 inline void split_xbm_into_columns(const uint8_t* xbm, uint8_t* columns, int width, int height) {
     for (int x = 0; x < width; x++) {
@@ -136,13 +135,11 @@ inline void doom_melt_frame_change(const uint8_t* old_image, const uint8_t* new_
     uint8_t* new_image_columns = (uint8_t*)malloc(WIDTH * BYTES_PER_COL);
     uint8_t* melt_columns_buf = (uint8_t*)malloc(WIDTH * BYTES_PER_COL);
     melt_delay = (uint8_t*)malloc(WIDTH);
-    melt_order = (uint8_t*)malloc(WIDTH);
-    if (!old_image_columns || !new_image_columns || !melt_columns_buf || !melt_delay || !melt_order) {
+    if (!old_image_columns || !new_image_columns || !melt_columns_buf || !melt_delay) {
         free(old_image_columns);
         free(new_image_columns);
         free(melt_columns_buf);
         free(melt_delay);
-        free(melt_order);
         return;
     }
     split_xbm_into_columns(new_image, new_image_columns, WIDTH, HEIGHT);
@@ -152,6 +149,7 @@ inline void doom_melt_frame_change(const uint8_t* old_image, const uint8_t* new_
     uint8_t step = 0;
     bool melt_finished = false;
     while (!melt_finished) {
+
 #if defined(ESP8266) || defined(ESP32)
         ESP.wdtDisable();
 #endif
@@ -170,8 +168,6 @@ inline void doom_melt_frame_change(const uint8_t* old_image, const uint8_t* new_
     free(new_image_columns);
     free(melt_columns_buf);
     free(melt_delay);
-    free(melt_order);
     melt_delay = nullptr;
-    melt_order = nullptr;
 }
 
