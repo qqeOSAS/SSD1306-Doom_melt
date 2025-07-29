@@ -53,6 +53,7 @@ In your `platformio.ini` file, add:
 ```ini
 lib_deps = 
     https://github.com/qqeOSAS/SSD1306-Doom_melt
+    olikraus/U8g2 @ ^2.35.19
 ```
 
 ---
